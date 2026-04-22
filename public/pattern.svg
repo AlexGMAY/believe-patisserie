@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <defs>
+    <pattern id="gold-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <circle cx="30" cy="30" r="1.5" fill="#f5b80b" opacity="0.15"/>
+      <circle cx="0" cy="0" r="1" fill="#f5b80b" opacity="0.08"/>
+      <circle cx="60" cy="60" r="1" fill="#f5b80b" opacity="0.08"/>
+      <path d="M0 30 L60 30" stroke="#f5b80b" stroke-width="0.3" opacity="0.05"/>
+      <path d="M30 0 L30 60" stroke="#f5b80b" stroke-width="0.3" opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="60" height="60" fill="url(#gold-pattern)"/>
+</svg>
