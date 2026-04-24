@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Calendar, Cake, Clock, Mail, MapPin, MessageSquare, Phone, User, Users } from 'lucide-react'
 
 export function ReservationSection() {
@@ -9,6 +9,24 @@ export function ReservationSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [selectedCakeType, setSelectedCakeType] = useState('Entremets Signature')
+
+  // Listen for cake selection event from CreationsSection
+  useEffect(() => {
+    const handleCakeSelection = (event: CustomEvent) => {
+      const { cakeName } = event.detail
+      setSelectedCakeType(cakeName)
+      
+      // Optional: Smooth scroll is already handled by the CreationsSection
+      // but we can add a small delay to ensure the form is visible
+    }
+
+    window.addEventListener('selectCake', handleCakeSelection as EventListener)
+    
+    return () => {
+      window.removeEventListener('selectCake', handleCakeSelection as EventListener)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,8 +70,8 @@ export function ReservationSection() {
                 <div>
                   <p className="font-medium">Notre atelier</p>
                   <p className="text-sm text-muted-foreground">
-                    12 rue du Faubourg Saint-Honoré<br />
-                    75008 Paris, France
+                    Résidence Tej Ennacer II <br />
+                    2034 Ariana, Tunis.
                   </p>
                 </div>
               </div>
@@ -93,7 +111,7 @@ export function ReservationSection() {
                 sera réalisé avec passion et précision."
               </p>
               <p className="text-sm font-medium mt-3 gold-gradient">
-                — John Believe, Chef pâtissier et fondateur
+                — John Believe, Chef pâtissier, fondateur et associé.
               </p>
             </div>
           </motion.div>
@@ -192,12 +210,23 @@ export function ReservationSection() {
                         <Cake className="h-4 w-4 text-gold" />
                         Type de gâteau
                       </label>
-                      <select className="w-full rounded-xl border border-gold/20 bg-background/50 px-4 py-3 focus:border-gold focus:ring-2 focus:ring-gold/20 outline-none transition">
+                      <select 
+                        className="w-full rounded-xl border border-gold/20 bg-background/50 px-4 py-3 focus:border-gold focus:ring-2 focus:ring-gold/20 outline-none transition"
+                        value={selectedCakeType}
+                        onChange={(e) => setSelectedCakeType(e.target.value)}
+                      >
                         <option>Entremets Signature</option>
                         <option>Tarte Citron Basilic</option>
                         <option>Chocolat Grand Cru</option>
                         <option>Fraisier Français</option>
-                        <option>Pièce Montée</option>
+                        <option>Pièce Montée Mariage</option>
+                        <option>Opéra Renversé</option>
+                        <option>Saint-Honoré</option>
+                        <option>Tarte au Chocolat</option>
+                        <option>Millefeuille Vanille</option>
+                        <option>Number Cake</option>
+                        <option>Paris-Brest</option>
+                        <option>Tarte Tatin</option>
                         <option>Gâteau personnalisé</option>
                       </select>
                     </div>

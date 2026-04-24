@@ -45,7 +45,7 @@
   --color-ring: #f5b80b;
 
   /* Gold Palette */
-  --color-gold: #f5b80b;
+  --color-gold: #FDD671;
   --color-gold-light: #fcd34d;
   --color-gold-dark: #b8860b;
   
@@ -64,7 +64,7 @@
   --color-popover: #121212;
   --color-popover-foreground: #f2f2f2;
   
-  --color-primary: #f5b80b;
+  --color-primary: #FDD671;
   --color-primary-foreground: #0a0a0a;
   
   --color-secondary: #1f1f1f;
@@ -73,7 +73,7 @@
   --color-muted: #1f1f1f;
   --color-muted-foreground: #999999;
   
-  --color-accent: #f5b80b;
+  --color-accent: #FDD671;
   --color-accent-foreground: #0a0a0a;
   
   --color-destructive: #e61e1e;
@@ -81,7 +81,7 @@
   
   --color-border: #2e2e2e;
   --color-input: #2e2e2e;
-  --color-ring: #f5b80b;
+  --color-ring: #FDD671;
 }
 
 /* Base Styles */

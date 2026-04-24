@@ -1,4 +1,3 @@
-```markdown
 # 🥐 Believe Patisserie
 
 <div align="center">
@@ -69,7 +68,7 @@
 | [next-themes](https://github.com/pacocoursey/next-themes) | 0.4.6 | Gestion du thème |
 | [Lucide React](https://lucide.dev/) | 1.8.0 | Icônes |
 
----
+
 
 ## 📁 Structure du Projet
 

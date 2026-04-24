@@ -22,21 +22,21 @@ const galleryImages = [
   },
   {
     id: 2,
-    src: 'https://images.unsplash.com/photo-1623428454614-9e9a4b0e6e3b?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&q=80',
     alt: 'Wedding cake floral',
     category: 'Mariage',
     likes: 98,
   },
   {
     id: 3,
-    src: 'https://images.unsplash.com/photo-1578985545062-69928b9d9587?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&q=80',
     alt: 'Entremets signature fruits rouges',
     category: 'Entremets',
     likes: 156,
   },
   {
     id: 4,
-    src: 'https://images.unsplash.com/photo-1606890737304-57a1ca8f5b62?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=800&q=80',
     alt: 'Gâteau chocolat grand cru',
     category: 'Entremets',
     likes: 203,
@@ -57,7 +57,7 @@ const galleryImages = [
   },
   {
     id: 7,
-    src: 'https://images.unsplash.com/photo-1578985545062-69928b9d9587?w=800&q=80',
+    src: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&q=80',
     alt: 'Opéra café et chocolat',
     category: 'Entremets',
     likes: 112,
@@ -163,7 +163,7 @@ export function GallerySection() {
           className="flex justify-center mb-8"
         >
           <a
-            href="https://instagram.com/believe.patisserie"
+            href="https://instagram.com/believepatisserie_tunis"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
@@ -173,7 +173,7 @@ export function GallerySection() {
               <circle cx="12" cy="12" r="3.5"/>
               <circle cx="17.5" cy="6.5" r="1.5"/>
             </svg>
-            <span>Suivez-nous sur Instagram @believe.patisserie</span>
+            <span>Suivez-nous sur Instagram @believepatisserie_tunis</span>
           </a>
         </motion.div>
 

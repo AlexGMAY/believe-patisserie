@@ -7,7 +7,7 @@ import { Cake, ChevronRight, Heart } from 'lucide-react'
 
 const cakeCategories = ['Tous', 'Mariage', 'Anniversaire', 'Entremets', 'Tartes']
 
-const cakes = [
+const initialCakes = [
   {
     id: 1,
     name: 'Entremets Signature',
@@ -23,7 +23,7 @@ const cakes = [
     description: 'Pâte sablée, lemon curd infusé au basilic frais, meringue italienne',
     price: 42,
     category: 'Tartes',
-    image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80', // Fixed
+    image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80',
     badge: 'Nouveauté',
   },
   {
@@ -48,7 +48,7 @@ const cakes = [
     description: 'Choux craquelin, crème diplomate, caramel beurre salé, nougatine',
     price: 180,
     category: 'Mariage',
-    image: 'https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=800&q=80', // Fixed
+    image: 'https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=800&q=80',
     badge: 'Sur commande',
   },
   {
@@ -57,18 +57,108 @@ const cakes = [
     description: 'Biscuit Joconde, ganache café, crème au beurre, glaçage chocolat',
     price: 56,
     category: 'Entremets',
-    image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=800&q=80', // Fixed
+    image: 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=800&q=80',
   },
 ]
 
+// Additional cakes that will be revealed when "Voir toutes nos créations" is clicked
+const additionalCakes = [
+  {
+    id: 7,
+    name: 'Saint-Honoré',
+    description: 'Pâte feuilletée, choux caramélisés, crème chiboust à la vanille',
+    price: 48,
+    category: 'Entremets',
+    image: 'https://images.unsplash.com/photo-1557925923-cd4648e211a0?w=800&q=80',
+  },
+  {
+    id: 8,
+    name: 'Tarte au Chocolat',
+    description: 'Pâte sucrée cacao, ganache onctueuse, éclats de fèves de cacao',
+    price: 38,
+    category: 'Tartes',
+    image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&q=80',
+  },
+  {
+    id: 9,
+    name: 'Millefeuille Vanille',
+    description: 'Pâte feuilletée caramélisée, crème diplomate vanille Bourbon',
+    price: 45,
+    category: 'Entremets',
+    image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=800&q=80',
+  },
+  {
+    id: 10,
+    name: 'Number Cake',
+    description: 'Biscuit sablé, crème mascarpone, fruits frais de saison',
+    price: 65,
+    category: 'Anniversaire',
+    image: 'https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?w=800&q=80',
+    badge: 'Personnalisable',
+  },
+  {
+    id: 11,
+    name: 'Paris-Brest',
+    description: 'Pâte à choux, crème mousseline praliné, amandes effilées',
+    price: 42,
+    category: 'Entremets',
+    image: 'https://images.unsplash.com/photo-1557925923-cd4648e211a0?w=800&q=80',
+  },
+  {
+    id: 12,
+    name: 'Tarte Tatin',
+    description: 'Pommes caramélisées, pâte feuilletée, crème fraîche',
+    price: 35,
+    category: 'Tartes',
+    image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&q=80',
+  },
+]
+
+interface CakeType {
+  id: number
+  name: string
+  description: string
+  price: number
+  category: string
+  image: string
+  badge?: string
+}
+
 export function CreationsSection() {
   const [activeCategory, setActiveCategory] = useState('Tous')
+  const [showAllCakes, setShowAllCakes] = useState(false)
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
+  // Combine cakes based on showAll state
+  const allCakes = showAllCakes ? [...initialCakes, ...additionalCakes] : initialCakes
+
   const filteredCakes = activeCategory === 'Tous'
-    ? cakes
-    : cakes.filter(cake => cake.category === activeCategory)
+    ? allCakes
+    : allCakes.filter(cake => cake.category === activeCategory)
+
+  // Handle Commander button click - scroll to reservation form with pre-selected cake
+  const handleCommander = (cake: CakeType) => {
+    // Scroll to reservation section
+    const reservationSection = document.getElementById('reserver')
+    if (reservationSection) {
+      reservationSection.scrollIntoView({ behavior: 'smooth' })
+    }
+
+    // Dispatch custom event with selected cake data
+    // The reservation form will listen for this event
+    window.dispatchEvent(new CustomEvent('selectCake', { 
+      detail: { 
+        cakeName: cake.name,
+        cakeId: cake.id 
+      } 
+    }))
+  }
+
+  // Handle View All button click
+  const handleViewAll = () => {
+    setShowAllCakes(true)
+  }
 
   return (
     <section id="creations" ref={ref} className="py-20 sm:py-28 bg-muted/30">
@@ -117,13 +207,17 @@ export function CreationsSection() {
         </motion.div>
 
         {/* Gallery Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <motion.div 
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          layout
+        >
           {filteredCakes.map((cake, index) => (
             <motion.div
               key={cake.id}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.1, duration: 0.5 }}
+              layout
               className="group relative rounded-2xl overflow-hidden bg-card border border-gold/10 hover:border-gold/30 transition-all duration-500 hover:shadow-2xl hover:shadow-gold/5"
             >
               {/* Image Container */}
@@ -140,7 +234,7 @@ export function CreationsSection() {
 
                 {/* Badge */}
                 {cake.badge && (
-                  <div className="absolute top-4 left-4">
+                  <div className="absolute top-4 left-4 z-10">
                     <span className="inline-flex items-center gap-1 rounded-full bg-gold/90 backdrop-blur-sm px-3 py-1 text-xs font-medium text-dark">
                       <Heart className="h-3 w-3 fill-dark" />
                       {cake.badge}
@@ -148,9 +242,12 @@ export function CreationsSection() {
                   </div>
                 )}
 
-                {/* Quick View Button */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button className="btn-gold py-2 px-4 text-sm">
+                {/* Quick View Button - Now with onClick handler */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                  <button 
+                    onClick={() => handleCommander(cake)}
+                    className="btn-gold py-2 px-4 text-sm cursor-pointer"
+                  >
                     Commander
                     <ChevronRight className="ml-1 h-3 w-3" />
                   </button>
@@ -172,19 +269,28 @@ export function CreationsSection() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* View All CTA */}
+        {/* View All CTA - Only shown if not already showing all cakes */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.6 }}
           className="text-center mt-12"
         >
-          <button className="btn-outline-gold">
-            Voir toutes nos créations
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </button>
+          {!showAllCakes ? (
+            <button 
+              onClick={handleViewAll}
+              className="btn-outline-gold group"
+            >
+              Voir toutes nos créations
+              <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {filteredCakes.length} créations disponibles
+            </p>
+          )}
         </motion.div>
       </div>
     </section>

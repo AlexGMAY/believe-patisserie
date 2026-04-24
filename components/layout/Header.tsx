@@ -39,19 +39,25 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10">
-              <Image
-                src="/logo.svg"
-                alt="Believe Patisserie"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-            <span className="font-cormorant text-xl font-bold gold-gradient hidden sm:block">
-              Believe Patisserie
-            </span>
-          </Link>
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gold/20 rounded-full blur-md group-hover:blur-xl transition-all duration-300" />
+                          <Image
+                            src="/logo.jpg"
+                            alt="Believe Patisserie"
+                            width={56}
+                            height={56}
+                            className="rounded-full relative z-10 border-2 border-gold/30 group-hover:border-gold transition-all duration-300"
+                          />
+                        </div>
+                        <div>
+                          <span className="font-cormorant text-2xl font-bold gold-gradient block leading-tight">
+                            Believe
+                          </span>
+                          <span className="text-xs text-gold/60 uppercase tracking-[0.2em]">
+                            Patisserie
+                          </span>
+                        </div>
+                      </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
@@ -68,7 +74,7 @@ export function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
-            <ThemeToggle />
+            {/* <ThemeToggle /> */}
             <Link
               href="#reserver"
               className="hidden md:inline-flex btn-gold py-2 px-5 text-sm"
@@ -93,7 +99,7 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden pt-4 pb-2">
+          <nav className="md:hidden pt-4 pb-2 bg-gray-900/90">
             {navItems.map((item) => (
               <Link
                 key={item.href}

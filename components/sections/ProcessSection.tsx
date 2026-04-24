@@ -89,8 +89,8 @@ export function ProcessSection() {
                   <p className="text-sm text-muted-foreground">{step.description}</p>
 
                   {/* Step Number (Desktop) */}
-                  <div className="hidden lg:block absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gold text-dark flex items-center justify-center text-sm font-bold">
-                    {index + 1}
+                  <div className="hidden lg:block absolute -top-3 -left-3 w-8 h-8 rounded-full bg-gold text-center text-dark pt-1 text-sm font-bold">
+                    <span>{index + 1}</span>
                   </div>
                 </div>
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import { 
   Award, 
@@ -13,7 +13,10 @@ import {
   Sparkles, 
   Star,
   Truck,
-  Users
+  Users,
+  ChevronLeft,
+  ChevronRight,
+  Quote
 } from 'lucide-react'
 
 const reasons = [
@@ -57,31 +60,82 @@ const reasons = [
 
 const testimonials = [
   {
-    name: 'Sophie Martin',
-    role: 'Mariée • Juin 2024',
-    content: 'Le gâteau de notre mariage était absolument magnifique et délicieux. Nos invités en parlent encore !',
+    name: 'Grace Mbuyi',
+    role: 'Mariée • Tunis, Juin 2024',
+    content: 'Le gâteau de notre mariage était absolument magnifique et délicieux. Nos invités en parlent encore ! La pièce montée était une œuvre d\'art.',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1494790108755-2616c7101333?w=100&q=80',
+    image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80',
+    location: '🇹🇳 Tunis',
   },
   {
-    name: 'Thomas Dubois',
-    role: 'Anniversaire • Mars 2024',
-    content: 'Un entremets au chocolat exceptionnel. L\'équipe a su comprendre exactement ce que je voulais.',
+    name: 'Amira Ben Salah',
+    role: 'Anniversaire • Tunis, Mars 2024',
+    content: 'Un entremets au chocolat exceptionnel. L\'équipe a su comprendre exactement ce que je voulais pour mes 30 ans. Service impeccable !',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80',
+    location: '🇹🇳 Tunis',
+  },
+  {
+    name: 'Jean-Paul Kabasele',
+    role: 'Anniversaire • Tunis, Janvier 2024',
+    content: 'Service impeccable, gâteau sublime et livraison parfaite. Je recommande les yeux fermés ! Le fraisier était divin.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80',
+    location: '🇹🇳 Tunis',
   },
   {
-    name: 'Julie Leroy',
-    role: 'Baptême • Janvier 2024',
-    content: 'Service impeccable, gâteau sublime et livraison parfaite. Je recommande les yeux fermés !',
+    name: 'Mariem Chebbi',
+    role: 'Mariage • Sousse, Mai 2024',
+    content: 'Believe Patisserie a créé le gâteau de mes rêves ! Design floral parfait, saveurs exquises. Tous mes invités étaient émerveillés.',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=100&q=80',
+    location: '🇹🇳 Sousse',
+  },
+  {
+    name: 'Christian Mwamba',
+    role: 'Anniversaire • Tunis, Avril 2024',
+    content: 'Le Number Cake personnalisé pour les 50 ans de mon père était spectaculaire. Qualité et créativité au rendez-vous !',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
+    location: '🇹🇳 Tunis',
+  },
+  {
+    name: 'Yasmine Trabelsi',
+    role: 'Fiançailles • Carthage, Février 2024',
+    content: 'Une expérience unique du début à la fin. Le gâteau était non seulement beau mais absolument délicieux. Merci infiniment !',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&q=80',
+    location: '🇹🇳 Carthage',
+  },
+  {
+    name: 'Patrick Ilunga',
+    role: 'Anniversaire • Tunis, Juillet 2025',
+    content: 'La pièce montée était monumentale ! Un chef-d\'œuvre gustatif et visuel. Believe Patisserie a rendu notre journée parfaite.',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=100&q=80',
+    location: '🇹🇳 Tunis',
+  },
+  {
+    name: 'Sarra Mejri',
+    role: 'Baby Shower • La Marsa, Août 2024',
+    content: 'Des gâteaux magnifiques et personnalisés pour mon baby shower. Les invitées ont adoré ! Saveurs raffinées et présentation parfaite.',
     rating: 5,
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80',
+    location: '🇹🇳 La Marsa',
+  },
+  {
+    name: 'Blaise Tshisekedi',
+    role: 'Diplomation • Tunis, Septembre 2024',
+    content: 'Pour la remise de diplôme de ma fille, Believe a créé un gâteau qui a ébloui toute la famille. Professionnalisme et talent !',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80',
+    location: '🇹🇳 Tunis',
   },
 ]
 
 const stats = [
   { value: '6+', label: 'Années d\'excellence' },
-  { value: '5000+', label: 'Gâteaux créés' },
+  { value: '200+', label: 'Gâteaux créés' },
   { value: '98%', label: 'Clients satisfaits' },
   { value: '24h', label: 'Réponse garantie' },
 ]
@@ -89,6 +143,62 @@ const stats = [
 export function WhyChooseUsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Calculate visible testimonials based on screen size
+  const getVisibleCount = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) return 3
+      if (window.innerWidth >= 768) return 2
+    }
+    return 1
+  }
+
+  const [visibleCount, setVisibleCount] = useState(3)
+
+  useEffect(() => {
+    setVisibleCount(getVisibleCount())
+    const handleResize = () => setVisibleCount(getVisibleCount())
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const maxSlides = testimonials.length - visibleCount
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev >= maxSlides ? 0 : prev + 1))
+  }, [maxSlides])
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev <= 0 ? maxSlides : prev - 1))
+  }, [maxSlides])
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index)
+    setIsAutoPlaying(false)
+    setTimeout(() => setIsAutoPlaying(true), 5000)
+  }
+
+  // Auto-play
+  useEffect(() => {
+    if (isAutoPlaying) {
+      autoPlayRef.current = setInterval(() => {
+        nextSlide()
+      }, 4000)
+    }
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current)
+      }
+    }
+  }, [isAutoPlaying, nextSlide])
+
+  // Pause auto-play on hover
+  const handleMouseEnter = () => setIsAutoPlaying(false)
+  const handleMouseLeave = () => setIsAutoPlaying(true)
 
   return (
     <section id="pourquoi-nous" ref={ref} className="py-20 sm:py-28 relative overflow-hidden">
@@ -105,7 +215,7 @@ export function WhyChooseUsSection() {
         >
           <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 mb-6">
             <Star className="h-4 w-4 text-gold fill-gold" />
-            <span className="text-sm text-gold">L'excellence à la française</span>
+            <span className="text-sm text-gold">L&apos;excellence à la française</span>
           </div>
           <h2 className="section-title">
             Pourquoi choisir{' '}
@@ -254,12 +364,14 @@ export function WhyChooseUsSection() {
           ))}
         </motion.div>
 
-        {/* Testimonials */}
+        {/* Testimonials Slider */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.9 }}
           className="mt-16"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 mb-4">
@@ -269,45 +381,102 @@ export function WhyChooseUsSection() {
             <h3 className="text-2xl font-playfair">
               Ils nous ont fait <span className="gold-gradient">confiance</span>
             </h3>
+            <p className="text-sm text-muted-foreground mt-2">
+              Des clients satisfaits à travers l&apos;Afrique et le monde
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
+          {/* Slider Container */}
+          <div className="relative">
+            {/* Slider Track */}
+            <div className="overflow-hidden">
               <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 1 + index * 0.1 }}
-                className="bg-card/50 backdrop-blur-sm rounded-2xl p-6 border border-gold/10"
+                className="flex gap-6"
+                animate={{ x: `-${currentSlide * (100 / visibleCount)}%` }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
-                {/* Rating Stars */}
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-gold fill-gold" />
-                  ))}
-                </div>
-                
-                <p className="text-sm text-muted-foreground mb-4 italic">
-                  "{testimonial.content}"
-                </p>
-                
-                <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-10 rounded-full overflow-hidden">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={testimonial.name}
+                    className="w-full flex-shrink-0"
+                    style={{ flexBasis: `${100 / visibleCount}%` }}
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="bg-card/50 backdrop-blur-sm rounded-2xl p-6 border border-gold/10 h-full flex flex-col"
+                    >
+                      {/* Quote Icon */}
+                      <Quote className="h-8 w-8 text-gold/20 mb-3" />
+                      
+                      {/* Rating Stars */}
+                      <div className="flex gap-1 mb-3">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="h-4 w-4 text-gold fill-gold" />
+                        ))}
+                      </div>
+                      
+                      {/* Content */}
+                      <p className="text-sm text-muted-foreground mb-4 italic flex-grow">
+                        &ldquo;{testimonial.content}&rdquo;
+                      </p>
+                      
+                      {/* Author */}
+                      <div className="flex items-center gap-3 mt-auto">
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gold/20">
+                          <Image
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">{testimonial.name}</p>
+                          <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                          <p className="text-xs text-gold/70">{testimonial.location}</p>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">{testimonial.name}</p>
-                    <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                  </div>
-                </div>
+                ))}
               </motion.div>
-            ))}
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 rounded-full bg-card border border-gold/20 flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 shadow-lg z-10"
+              aria-label="Témoignage précédent"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+
+            <button
+              onClick={nextSlide}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 rounded-full bg-card border border-gold/20 flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 shadow-lg z-10"
+              aria-label="Témoignage suivant"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center gap-2 mt-6">
+              {Array.from({ length: maxSlides + 1 }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-4 h-4 rounded-full transition-all duration-300 ${
+                    index === currentSlide
+                      ? 'bg-gold w-6'
+                      : 'bg-gold/30 hover:bg-gold/50'
+                  }`}
+                  aria-label={`Aller au témoignage ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </motion.div>
 
